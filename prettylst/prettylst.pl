@@ -2168,6 +2168,7 @@ my %master_order = (
 	'CLASS Level' => [
 		'000Level',
 		'REPEATLEVEL',
+		'DONOTADD',
 		'UATT',
 		'UDAM',
 		'UMULT',
@@ -2887,6 +2888,9 @@ my %master_order = (
 		'TEMPLATE',
 		'WEAPONPROF',
 		'#EXTRAFILE',		# Fix #EXTRAFILE so it recognizes #EXTRAFILE references (so OGL is a known referenced file again.)
+		'DATACONTROL',		# New for FACT/FACTSET & Formula Replacement
+		'VARIABLE',			# Formula System Support - houses the Variables
+		'GLOBALMODIFIER',	# Formula System Support - handles global modifiers
 
 		#These tags are normal file global tags....
 		@double_PCC_tags,		#Global tags that are double - $tag does not end with ':'
@@ -3535,6 +3539,16 @@ my %master_order = (
 		'EXPLANATION',			
 	],
 
+	'DATACONTROL' => [
+		'000DataControlName',
+		'EXPLANATION',			
+	],
+
+	'GLOBALMODIFIER' => [
+		'000VariableName',
+		'EXPLANATION',			
+	],
+
 );
 
 #################################################################
@@ -3700,17 +3714,26 @@ my %column_with_no_tag = (
 		'000VariableName',
 	],
 
+	'DATACONTROL' => [
+		'000DataControlName',
+	],
+
+	'GLOBALMODIFIER' => [
+		'000GlobalModifierName',
+	],
+
 );
 
 my %token_ADD_tag = map { $_ => 1 } (
 	'ADD:.CLEAR',
+	'ADD:ABILITY',
 	'ADD:CLASSSKILLS',
 	'ADD:DOMAIN',
 	'ADD:EQUIP',
 	'ADD:FAVOREDCLASS',
-	'ADD:FEAT',
-	'ADD:FORCEPOINT',
-	'ADD:INIT',
+	'ADD:FEAT',			# Deprecated - Remove 6.8 - ADD:FEAT is now ADD:ABILITY
+	'ADD:FORCEPOINT',	# What is this???
+	'ADD:INIT',			# What is this???
 	'ADD:LANGUAGE',
 	'ADD:SAB',
 	'ADD:SPECIAL',		# Deprecated - Remove 5.16 - Special abilities are now set using hidden feats or Abilities.
@@ -3718,13 +3741,13 @@ my %token_ADD_tag = map { $_ => 1 } (
 	'ADD:SKILL',
 	'ADD:TEMPLATE',
 	'ADD:WEAPONPROFS',
-	'ADD:VFEAT',
+	'ADD:VFEAT',		# Deprecated - Remove 6.8 - ADD:VFEAT is now ADD:ABILITY
 );
 
 my %token_BONUS_tag = map { $_ => 1 } (
 	'ABILITYPOOL',
 	'CASTERLEVEL',
-	'CHECKS',
+	'CHECKS',		# Deprecated - Remove 6.8
 	'COMBAT',
 	'DAMAGE',		# Deprecated 4.3.8 - Remove 5.16.0 - Use BONUS:COMBAT|DAMAGE.x|y
 	'DC',
@@ -3734,7 +3757,7 @@ my %token_BONUS_tag = map { $_ => 1 } (
 	'EQMARMOR',
 	'EQMWEAPON',
 	'ESIZE',		# Not listed in the Docs
-	'FEAT',
+	'FEAT',			# Deprecated - Remove 6.8
 	'FOLLOWERS',
 	'HD',
 	'HP',
@@ -3833,7 +3856,7 @@ my %token_BONUS_SLOTS_types = map { $_ => 1 } (
 my @token_AUTO_tag = (
 	'ARMORPROF',
 	'EQUIP',
-	'FEAT',
+	'FEAT',			# Deprecated - Remove 6.8
 	'LANG',
 	'SHIELDPROF',
 	'WEAPONPROF',
@@ -3853,12 +3876,12 @@ my %token_CHOOSE_tag = map { $_ => 1 } (
 	'DOMAIN',
 	'EQBUILDER.SPELL',		# EQUIPMENT ONLY
 	'EQUIPMENT',
-	'FEAT',
-	'FEATSELECTION',
+	'FEAT',				# Deprecated - Remove 6.8
+	'FEATSELECTION',	# Deprecated - Remove 6.8
 	'LANG',
-	'LANGAUTO',
+	'LANGAUTO',			# Deprecated - Remove 6.8 - now AUTO:LANG
 	'NOCHOICE',
-	'NUMBER',
+	'NUMBER',			# Deprecated - Remove 6.8 - use TEMPVALUE:x
 	'NUMCHOICES',
 	'PCSTAT',
 	'RACE',
@@ -3866,7 +3889,7 @@ my %token_CHOOSE_tag = map { $_ => 1 } (
 	'SHIELDPROFICIENCY',
 	'SIZE',
 	'SKILL',
-	'SKILLBONUS',
+	'SKILLBONUS',		# What is this?
 	'SPELLLEVEL',
 	'SPELLS',
 	'STATBONUS',		# EQUIPMENT ONLY
@@ -4004,6 +4027,8 @@ my %tagheader = (
 		'000ShieldName'		=> '# Shield Name',
 
 		'000VariableName'		=> '# Variable Name',
+		'000DataControlName'		=> '# Name',
+		'000GlobalModifierName'		=> '# Name',
 
 
 		'ABILITY'					=> 'Ability',
@@ -4011,7 +4036,7 @@ my %tagheader = (
 		'ACHECK'					=> 'Skill Penalty?',
 		'ADD'						=> 'Add ',
 		'ADD:EQUIP'					=> 'Add Equipment',
-		'ADD:FEAT'					=> 'Add Feat',
+		'ADD:FEAT'					=> 'Add Feat',				# Deprecated
 		'ADD:SAB'					=> 'Add Special Ability',
 		'ADD:SKILL'					=> 'Add Skill',
 		'ADD:TEMPLATE'				=> 'Add Template',
@@ -4042,7 +4067,7 @@ my %tagheader = (
 		'BONUSSPELLSTAT'			=> 'Spell Stat Bonus',
 		'BONUS:ABILITYPOOL'			=> 'Bonus Ability Pool',
 		'BONUS:CASTERLEVEL'			=> 'Caster level',
-		'BONUS:CHECKS'				=> 'Save checks bonus',
+		'BONUS:CHECKS'				=> 'Save checks bonus',				# Deprecated
 		'BONUS:SAVE'				=> 'Save bonus',
 		'BONUS:COMBAT'				=> 'Combat bonus',
 		'BONUS:DAMAGE'				=> 'Weapon damage bonus',
@@ -4058,7 +4083,7 @@ my %tagheader = (
 		'BONUS:HD'					=> 'Modify HD type',
 		'BONUS:HP'					=> 'Bonus to HP',
 		'BONUS:ITEMCOST'			=> 'Modify the item cost',
-		'BONUS:LANGUAGES'			=> 'Bonus language',
+		'BONUS:LANGUAGES'			=> 'Bonus language',				# Deprecated
 		'BONUS:MISC'				=> 'Misc bonus',
 		'BONUS:MOVEADD'				=> 'Add to base move',
 		'BONUS:MOVEMULT'			=> 'Multiply base move',
@@ -4122,6 +4147,7 @@ my %tagheader = (
 		'DESCRIPTOR'				=> 'Descriptor',
 		'DOMAIN'					=> 'Domain',
 		'DOMAINS'					=> 'Domains',
+		'DONOTADD'					=> 'Not Added',
 		'DR:.CLEAR'					=> 'Remove Damage Reduction',
 		'DR'						=> 'Damage Reduction',
 		'DURATION:.CLEAR'			=> 'Clear Duration',
@@ -4132,8 +4158,8 @@ my %tagheader = (
 		'EXPLANATION'				=> 'Explanation',
 		'FACE'						=> 'Face/Space',
 		'FEAT'						=> 'Feat',
-		'FEATAUTO'					=> 'Feat Auto',
-		'FOLLOWERS'					=> 'Allow Follower',
+#		'FEATAUTO'					=> 'Feat Auto',						# Deprecated
+		'FOLLOWERS'					=> 'Grant Follower',
 		'FREE'						=> 'Free',
 		'FUMBLERANGE'				=> 'Fumble Range',
 		'GENDER'					=> 'Gender',
@@ -4146,12 +4172,12 @@ my %tagheader = (
 		'HITDICEADVANCEMENT'		=> 'Hit Dice Advancement',
 		'HITDICESIZE'				=> 'Hit Dice Size',
 		'ITEM'						=> 'Item',
-		'KEY'						=> 'Unique Key',
+		'KEY'						=> 'Unique ID',
 		'KIT'						=> 'Apply Kit',
 		'KNOWN'						=> 'Known',
 		'KNOWNSPELLS'				=> 'Automatically Known Spell Levels',
-		'LANGAUTO'					=> 'Automatic Languages',				# Deprecated
-		'LANGAUTO:.CLEAR'			=> 'Clear Automatic Languages',			# Deprecated
+#		'LANGAUTO'					=> 'Automatic Languages',				# Deprecated
+#		'LANGAUTO:.CLEAR'			=> 'Clear Automatic Languages',			# Deprecated
 		'LANGBONUS'					=> 'Bonus Languages',
 		'LANGBONUS:.CLEAR'			=> 'Clear Bonus Languages',
 		'LEGS'						=> 'Nb Legs',
@@ -4162,7 +4188,7 @@ my %tagheader = (
 		'MAXDEX'					=> 'Maximum DEX Bonus',
 		'MAXLEVEL'					=> 'Max Level',
 		'MEMORIZE'					=> 'Memorize',
-		'MFEAT'						=> 'Default Monster Feat',
+#		'MFEAT'						=> 'Default Monster Feat',				# Deprecated
 		'MONSKILL'					=> 'Monster Initial Skill Points',
 		'MOVE'						=> 'Move',
 		'MOVECLONE'					=> 'Clone Movement',
@@ -4334,8 +4360,8 @@ my %tagheader = (
 		'REMOVE'					=> 'Remove Object',
 		'REP'						=> 'Reputation',
 		'ROLE'						=> 'Monster Role',
-		'SA'						=> 'Special Ability',
-		'SA:.CLEAR'					=> 'Clear SAs',
+#		'SA'						=> 'Special Ability',				# Deprecated
+#		'SA:.CLEAR'					=> 'Clear SAs',				# Deprecated
 		'SAB:.CLEAR'				=> 'Clear Special ABility',
 		'SAB'						=> 'Special ABility',
 		'SAVEINFO'					=> 'Save Info',
@@ -4388,8 +4414,8 @@ my %tagheader = (
 		'UMULT'						=> 'Unarmed Multiplier',
 		'UNENCUMBEREDMOVE'			=> 'Ignore Encumberance',
 		'VARIANTS'					=> 'Spell Variations',
-		'VFEAT'						=> 'Virtual Feat',
-		'VFEAT:.CLEAR'				=> 'Clear Virtual Feat',
+		'VFEAT'						=> 'Virtual Feat',				# Deprecated
+		'VFEAT:.CLEAR'				=> 'Clear Virtual Feat',				# Deprecated
 		'VISIBLE'					=> 'Visible',
 		'VISION'					=> 'Vision',
 		'WEAPONBONUS'				=> 'Optionnal Weapon Prof.',
@@ -4401,16 +4427,16 @@ my %tagheader = (
 
 	'ABILITYCATEGORY' => {
 		'000AbilityCategory'	=> '# Ability Category',
-		'CATEGORY'			=> 'Category of Object',
-		'DISPLAYLOCATION'		=> 'Display Location',
-		'DISPLAYNAME'		=> 'Display where?',
+		'CATEGORY'			=> 'Category',
+		'DISPLAYLOCATION'		=> 'Location',
+		'DISPLAYNAME'		=> 'Display Name',
 		'EDITABLE'			=> 'Editable?',
-		'EDITPOOL'			=> 'Change Pool?',
-		'FRACTIONALPOOL'		=> 'Fractional values?',
-		'PLURAL'			=> 'Plural description for UI',
-		'POOL'			=> 'Base Pool number',
-		'TYPE'			=> 'Type of Object',
-		'ABILITYLIST'		=> 'Specific choices list',
+		'EDITPOOL'			=> 'Alter number?',
+		'FRACTIONALPOOL'		=> 'Fractional?',
+		'PLURAL'			=> 'Plural for UI',
+		'POOL'			=> 'Pool number',
+		'TYPE'			=> 'Type to List',
+		'ABILITYLIST'		=> 'Specific list',
 		'VISIBLE'			=> 'Visible',
 	},
 
@@ -4424,6 +4450,8 @@ my %tagheader = (
 
 	'CLASS' => {
 		'000ClassName'		=> '# Class Name',
+		'FACT:ClassType'	=> 'Class Type',
+		'FACT:Abb'			=> 'Abbreviation',
 		'CLASSTYPE'			=> 'Class Type',
 		'ABB'				=> 'Abbreviation',
 		'ALLOWBASECLASS',		=> 'Base class as subclass?',
@@ -4433,8 +4461,9 @@ my %tagheader = (
 		'LEVELSPERFEAT'		=> 'Levels per Feat',
 		'MODTOSKILLS'		=> 'Add INT to Skill Points?',
 		'MONNONSKILLHD'		=> 'Extra Hit Die Skills Limit',
-		'MULTIPREREQS'		=> 'MULTIPREREQS',
-		'SPECIALS'			=> 'Class Special Ability',	# Deprecated - Use SA
+#		'MULTIPREREQS'		=> 'MULTIPREREQS',
+#		'SPECIALS'			=> 'Class Special Ability',	# Deprecated - Use SA
+		'PREMULT'		=> 'MULTIPREREQS',
 		'DEITY'			=> 'Deities allowed',
 		'ROLE'			=> 'Monster Role',
 	},
@@ -4446,12 +4475,13 @@ my %tagheader = (
 	'COMPANIONMOD' => {
 		'000Follower'		=> '# Class of the Master',
 		'000MasterBonusRace'	=> '# Race of familiar',
-		'COPYMASTERBAB'		=> 'Copy Masters BAB',
-		'COPYMASTERCHECK'		=> 'Copy Masters Checks',
-		'COPYMASTERHP'		=> 'HP formula based on Master',
+		'TYPE'					=> 'Follower Type'
+		'COPYMASTERBAB'		=> 'Use Master's BAB',
+		'COPYMASTERCHECK'		=> 'Use Masters Saves',
+		'COPYMASTERHP'		=> 'Use Master's HP',
 		'FOLLOWER'			=> 'Added Value',
 		'SWITCHRACE'		=> 'Change Racetype',
-		'USEMASTERSKILL'  	=> 'Use Masters skills?',
+		'USEMASTERSKILL'  	=> 'Use Master's skills?',
 	},
 
 	'DEITY' => {
