@@ -4125,6 +4125,7 @@ my %tagheader = (
 		'DESCRIPTOR'				=> 'Descriptor',
 		'DOMAIN'					=> 'Domain',
 		'DOMAINS'					=> 'Domains',
+		'DONOTADD'					=> 'Do Not Add',
 		'DR:.CLEAR'					=> 'Remove Damage Reduction',
 		'DR'						=> 'Damage Reduction',
 		'DURATION:.CLEAR'			=> 'Clear Duration',
