@@ -6948,19 +6948,6 @@ sub parse_tag {
 				);
 	}
 
-	########################################################################
-	# [ 1683231 ] CHOOSE:SCHOOLS does not have arguments
-	# Warn if there are arguments passed to CHOOSE:SCHOOLS
-
-	if ($tag_text =~ '^CHOOSE:SCHOOLS\|') {
-		$logging->ewarn(WARNING,
-			qq{Invalid format in "$tag_text", CHOOSE:SCHOOLS does not support any additional arguments or the pipe separator.},
-			$file_for_error,
-			$line_for_error
-			);
-	}
-
-
 	# Special cases like ADD:... and BONUS:...
 	if ( $tag eq 'ADD' ) {
 		my ( $type, $addtag, $therest, $add_count )
