@@ -2011,7 +2011,7 @@ my %master_order = (
 		'SPELLLEVEL:CLASS:*',
 		'SPELLLEVEL:DOMAIN:*',
 		'UNENCUMBEREDMOVE',
-		'TEMPBONUS',
+		'TEMPBONUS:*',
 		'SA:.CLEAR',		# Deprecated
 		'SA:*',				# Deprecated
 		'ADD:SPECIAL',		# Deprecated - Remove 5.16 - Special abilities are now set using hidden feats 0r Abilities.
