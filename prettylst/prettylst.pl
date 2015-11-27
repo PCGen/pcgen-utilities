@@ -1779,8 +1779,6 @@ my @PRE_Tags = (
 	'!PRETEXT',
 	'PRETYPE:*',
 	'!PRETYPE:*',
-	'PRETOTALAB',
-	'!PRETOTALAB',
 	'PRETOTALAB:*',
 	'!PRETOTALAB:*',
 	'PREUATT',
@@ -3601,6 +3599,11 @@ my %master_order = (
 
 	'DATACONTROL' => [
 		'000DatacontrolName',
+		'DATAFORMAT',
+		'REQUIRED',
+		'SELECTABLE',
+		'VISIBLE',
+		'DISPLAYNAME',
 		'EXPLANATION',			
 	],
 
@@ -4079,7 +4082,7 @@ my %tagheader = (
 		'USEUNTRAINED'		=> 'Untrained?',
 		'SITUATION'			=> 'Situational Skill',
 
-#		'000TemplateName'		=> '# Template Name',
+		'000TemplateName'		=> '# Template Name',
 
 		'000WeaponName'		=> '# Weapon Name',
 		'000ArmorName'		=> '# Armor Name',
@@ -4088,7 +4091,10 @@ my %tagheader = (
 		'000VariableName'		=> '# Name',
 		'000GlobalmodName'		=> '# Name',
 		'000DatacontrolName'	=> '# Name',
-
+		'DATAFORMAT'			=> 'Dataformat',
+		'REQUIRED'				=> 'Required',
+		'SELECTABLE'			=> 'Selectable',
+		'DISPLAYNAME'			=> 'Displayname',
 
 		'ABILITY'					=> 'Ability',
 		'ACCHECK'					=> 'AC Penalty Check',
