@@ -40,8 +40,8 @@ use English qw( -no_match_vars );	# No more funky punctuation variables
 #my $SVN_build = $SVN_array[2];
 #my $SVN_date = $SVN_array[3];
 #$SVN_date =~ tr{-}{.};
-my $VERSION		= "6.05.01";
-my $VERSION_DATE	= "2015-06-01";
+my $VERSION		= "6.06.00";
+my $VERSION_DATE	= "2015-12-15";
 my ($PROGRAM_NAME)	= "PCGen PrettyLST";
 my ($SCRIPTNAME)	= ( $PROGRAM_NAME =~ m{ ( [^/\\]* ) \z }xms );
 my $VERSION_LONG	= "$SCRIPTNAME version: $VERSION -- $VERSION_DATE";
