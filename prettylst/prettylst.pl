@@ -4984,7 +4984,6 @@ if ($cl_options{input_path}) {
 		my $SOURCELONG_found	= q{};		#
 		my $SOURCESHORT_found   = q{};		#
 		my $LST_found		= NO;
-		my $CVS_tag_found		= NO;
 		my @pcc_lines		= ();
 		my %found_filetype;
 		my $continue		= YES;
@@ -5094,11 +5093,6 @@ if ($cl_options{input_path}) {
 				delete $filelist_notpcc{$lstfile} if exists $filelist_notpcc{$lstfile};
 				$LST_found = YES;
 			}
-			elsif ( $tag =~ /^\#/ ) {
-
-				# It is a comment line
-				$CVS_tag_found = YES if /^\#.*CVS.*Revision/i;
-			}
 			elsif ( $valid_tags{'PCC'}{$tag} ) {
 
 				# All the tags that do not have file should be cought here
@@ -5171,7 +5165,6 @@ if ($cl_options{input_path}) {
 						# prevent the file from being written.
 						$continue		= NO;
 						$must_write	= NO;
-						$CVS_tag_found  = YES;
 					}
 				}
 				elsif ( $tag eq 'BOOKTYPE' || $tag eq 'TYPE' ) {
@@ -5193,12 +5186,6 @@ if ($cl_options{input_path}) {
 					$GAMEMODE_found = $value;
 					$must_write	= YES;
 				}
-			}
-		}
-		elsif ( $_ =~ / \A [#] /xms ) {
-			# It is a comment line
-			if ( / \A [#] .* CVS .* Revision /xmsi ) {
-				$CVS_tag_found = YES;
 			}
 		}
 		elsif ( / <html> /xmsi ) {
@@ -5247,7 +5234,7 @@ if ($cl_options{input_path}) {
 		}
 
 		# Do we copy the .PCC???
-		if ( $cl_options{output_path} && ( $must_write || !$CVS_tag_found ) && $writefiletype{"PCC"} ) {
+		if ( $cl_options{output_path} && ( $must_write ) && $writefiletype{"PCC"} ) {
 			my $new_pcc_file = $pcc_file_name;
 			$new_pcc_file =~ s/$cl_options{input_path}/$cl_options{output_path}/i;
 
@@ -5258,11 +5245,6 @@ if ($cl_options{input_path}) {
 
 			# We keep track of the files we modify
 			push @modified_files, $pcc_file_name;
-
-			# We add a CVS revision number is not present
-			print {$new_pcc_fh}
-				"# CVS \$Revision\$ \$Author\$ -- $today -- reformated by $SCRIPTNAME v$VERSION\n"
-				if $pcc_lines[0] !~ / \A [#] .* CVS .* Revision /xmsi;
 
 			for my $line (@pcc_lines) {
 				print {$new_pcc_fh} "$line\n";
@@ -5448,17 +5430,6 @@ for my $file (@files_to_parse_sorted) {
 		next FILE_TO_PARSE;
 	}
 
-	# If the first line is the prettylst comment, we remove it.
-	my $cvs_line	= "";
-	my $cvs_present = 0;
-	if ( $lines[0] =~ /\# .* -- reformated by /i || $lines[0] =~ /\#.*CVS.*Revision/i ) {
-		$cvs_line	= $lines[0];
-		$lines[0]	= '#$$$ CVS comment $$$';
-		$cvs_present = 1;
-	}
-	$cvs_line = ( $cvs_line =~ /(\# cvs.*revision.*author.*?) -- /i )[0]
-			|| '# CVS $' . 'Revision: $ $' . 'Author: $';
-
 	# Read the full file into the @lines array
 	chomp(@lines);
 
@@ -5502,7 +5473,6 @@ for my $file (@files_to_parse_sorted) {
 
 		# First, we check if there are obvious resons not to write the new file
 		if (	!$numberofcf						# No extra CRLF char. were removed
-			&& $cvs_present						# CVS head was already present
 			&& scalar(@lines) == scalar(@$newlines_ref)	# Same number of lines
 		) {
 			# We assume the arrays are the same ...
@@ -5539,14 +5509,12 @@ for my $file (@files_to_parse_sorted) {
 		}
 
 		# The first line of the new file will be a comment line.
-		print {$write_fh} "$cvs_line -- $today -- reformated by $SCRIPTNAME v$VERSION\n"
+		print {$write_fh} "$today -- reformated by $SCRIPTNAME v$VERSION\n"
 		if $cl_options{output_path} || ( *NEWFILE eq *STDOUT );
 
 		# We print the result
 		LINE:
 		for my $line ( @{$newlines_ref} ) {
-			next LINE if $line eq '#$$$ CVS comment $$$';
-
 			#$line =~ s/\s+$//;
 			print {$write_fh} "$line\n" if $cl_options{output_path} || ( *NEWFILE eq *STDOUT );
 		}
@@ -14742,8 +14710,6 @@ sub warn_deprecate {
 
 			# Header part.
 			print {$bioset_fh} << "END_OF_HEADER";
-# CVS \$Revision\$ \$Author\$ -- $today -- reformated by $SCRIPTNAME v$VERSION
-
 AGESET:0|Adulthood
 END_OF_HEADER
 
