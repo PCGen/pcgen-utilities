@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd" >
-<language name="PCGen data file" section="Other" version="1.01c" kateversion="2.3" extensions="*.lst" mimetype="text/pcgen" author="Michael W. Fender (fluxxdog@gmail.com)" license="GPL" >
+<language name="PCGen data file" section="Other" version="1.01c" kateversion="3.4" extensions="*.lst" mimetype="text/pcgen" author="Michael W. Fender (fluxxdog@gmail.com)" license="GPL" >
 	<highlighting>
 		<list name="tags" >
 			<item> ABB </item>
@@ -17,6 +17,7 @@
 			<item> ALTCRITRANGE </item>
 			<item> ALTCRITMULT </item>
 			<item> ALTDAMAGE </item>
+			<item> APPLIEDNAME </item>
 			<item> ATTACKCYCLE </item>
 			<item> BASEAGE </item>
 			<item> BASEAGEADD </item>
@@ -34,13 +35,16 @@
 			<item> CHARGES </item>
 			<item> CLASS </item>
 			<item> CLASSES </item>
+			<item> CLASSTYPE </item>
 			<item> COMPS </item>
+			<item> CONCENTRATION </item>
 			<item> COPYMASTERBAB </item>
 			<item> COPYMASTERCHECK </item>
 			<item> COPYMASTERHP </item>
 			<item> COST </item>
 			<item> COSTPRE </item>
 			<item> CR </item>
+			<item> CRMOD </item>
 			<item> CRITMULT </item>
 			<item> CRITRANGE </item>
 			<item> CT </item>
@@ -56,6 +60,7 @@
 			<item> EDITABLE </item>
 			<item> EDITPOOL </item>
 			<item> EDR </item>
+			<item> EQUIPBUY </item>
 			<item> EXCHANGELEVEL </item>
 			<item> EXCLASS </item>
 			<item> EYES </item>
@@ -69,6 +74,8 @@
 			<item> FOLLOWERS </item>
 			<item> FORMATCAT </item>
 			<item> FUMBLERANGE </item>
+			<item> GEAR </item>
+			<item> GENDER </item>
 			<item> GENDERLOCK </item>
 			<item> HAIR </item>
 			<item> HANDS </item>
@@ -92,6 +99,7 @@
 			<item> LEVEL </item>
 			<item> LEVELADJUSTMENT </item>
 			<item> LEVELSPERFEAT </item>
+			<item> LOCATION </item>
 			<item> MASTERBONUSRACE </item>
 			<item> MAXAGE </item>
 			<item> MAXDEX </item>
@@ -106,6 +114,7 @@
 			<item> MONSTERCLASS </item>
 			<item> MOVE </item>
 			<item> MOVECLONE </item>
+			<item> NAME </item>
 			<item> NAMEOPT </item>
 			<item> NONPP </item>
 			<item> NUMPAGES </item>
@@ -127,6 +136,7 @@
 			<item> RACENAME </item>
 			<item> RACESUBTYPE </item>
 			<item> RACETYPE </item>
+			<item> RANK </item>
 			<item> RATEOFFIRE </item>
 			<item> REACH </item>
 			<item> REACHMULT </item>
@@ -134,10 +144,13 @@
 			<item> REPEATLEVEL </item>
 			<item> REMOVE </item>
 			<item> REPLACES </item>
+			<item> ROLE </item>
 			<item> SAVES </item>
 			<item> SELECT </item>
 			<item> SIZE </item>
 			<item> SCHOOL </item>
+			<item> SELECTION </item>
+			<item> SKILL </item>
 			<item> SKILLMULT </item>
 			<item> SKILLLIST </item>
 			<item> SKINTONE </item>
@@ -194,6 +207,7 @@
 			<item> CLASS </item>
 			<item> CLASSLEVEL </item>
 			<item> CON </item>
+			<item> CONCENTRATION </item>
 			<item> CONSCORE </item>
 			<item> CR </item>
 			<item> DEX </item>
@@ -336,6 +350,7 @@
 				<StringDetect String="DEFINE" attribute="Tags" context="DEFINE" />
 				<StringDetect String="NATURALATTACKS" attribute="Tags" context="NatAttacks" />
 				<StringDetect String="SPELLS" attribute="Tags" context="SPELLS" />
+				<StringDetect String="TEMPBONUS" context="BONUS" />
 				<IncludeRules context="KeepNeat" />
 				<DetectChar char="|" attribute="Pipes" />
 			</context>
