@@ -1901,6 +1901,7 @@ my @Global_BONUS_Tags = (
 	'BONUS:CASTERLEVEL:*',		# Global
 	'BONUS:CHECKS:*',			# Global	DEPRECATED
 	'BONUS:COMBAT:*',			# Global
+	'BONUS:CONCENTRATION:*',		# Global
 	'BONUS:DC:*',			# Global
 	'BONUS:DOMAIN:*',			# Global
 	'BONUS:DR:*',			# Global
@@ -1958,6 +1959,7 @@ my @double_PCC_tags = (
 	'BONUS:CASTERLEVEL:*',		
 	'BONUS:CHECKS:*',			
 	'BONUS:COMBAT:*',			
+	'BONUS:CONCENTRATION:*',
 	'BONUS:DC:*',			
 	'BONUS:DOMAIN:*',			
 	'BONUS:DR:*',			
@@ -2872,6 +2874,7 @@ my %master_order = (
 		'BONUS:CASTERLEVEL:*',
 		'BONUS:CHECKS:*',
 		'BONUS:COMBAT:*',
+		'BONUS:CONCENTRATION:*',
 		'BONUS:DC:*',
 		'BONUS:FEAT:*',
 		'BONUS:MOVEADD:*',
@@ -3882,6 +3885,7 @@ my %token_BONUS_tag = map { $_ => 1 } (
 	'CASTERLEVEL',
 	'CHECKS',		# Deprecated
 	'COMBAT',
+	'CONCENTRATION',
 	'DAMAGE',		# Deprecated 4.3.8 - Remove 5.16.0 - Use BONUS:COMBAT|DAMAGE.x|y
 	'DC',
 	'DOMAIN',
@@ -4207,6 +4211,7 @@ my %tagheader = (
 		'BONUS:ABILITYPOOL'			=> 'Bonus Ability Pool',
 		'BONUS:CASTERLEVEL'			=> 'Caster level',
 		'BONUS:CHECKS'				=> 'Save checks bonus',
+		'BONUS:CONCENTRATION'				=> 'Concentration bonus',
 		'BONUS:SAVE'				=> 'Save bonus',
 		'BONUS:COMBAT'				=> 'Combat bonus',
 		'BONUS:DAMAGE'				=> 'Weapon damage bonus',
