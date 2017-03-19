@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 
-# * Copyright
-
 # Copyright 2002 to 2006 by Eric Beaudoin <beaudoer@videotron.ca>.
 # Copyright 2006 to 2007 by Andrew McDougall <tir.gwaith@gmail.com>
 # Copyright 2008 by Phillip Ryan <philryan49@hotmail.com>
@@ -22,24 +20,10 @@
 
 use 5.008_001;				# Perl 5.8.1 or better is now mandantory
 use strict;
-# use warnings;
+use warnings;
 use Fatal qw( open close );		# Force some built-ins to die on error
 use English qw( -no_match_vars );	# No more funky punctuation variables
 
-# If you you downloaded PrettyLst from SVN but you do not have an SVN Client
-# you will need to revise the line starting with my $SVN_id = . At the end of that line
-# insert ": prettylst.pl 7075 2008-07-09 20:15:16Z historyphil " betwwen the d and the $
-# Do not inclued the double quotes {"}. The double quotes are only used to indicate needed spaces.
-# Change the old build number and the date and time values
-# to the values shown on SVN for this revision.
-# Remove SVN hooks from displayed version.
-
-# Version information			# Converting to SVN Id parsing using array - Tir Gwaith
-#my $SVN_id = '$Id: prettylst.pl 25712 2014-12-04 07:18:09Z amaitland $';
-#my @SVN_array = split ' ', $SVN_id;
-#my $SVN_build = $SVN_array[2];
-#my $SVN_date = $SVN_array[3];
-#$SVN_date =~ tr{-}{.};
 my $VERSION		= "6.06.00";
 my $VERSION_DATE	= "2015-12-15";
 my ($PROGRAM_NAME)	= "PCGen PrettyLST";
@@ -89,6 +73,7 @@ sub warn_deprecate;
 sub record_bioset_tags;
 sub generate_bioset_files;
 sub generate_css;
+sub normalize_file;
 
 # File handles for the Export Lists
 my %filehandle_for;
@@ -560,7 +545,8 @@ my @valid_system_alignments  = qw( LG  LN  LE  NG  TN  NE  CG  CN  CE  NONE  Dei
 
 my @valid_system_check_names = qw( Fortitude Reflex Will );
 
-my @valid_system_game_modes  = qw(
+
+my @valid_system_game_modes  = do { no warnings 'qw'; qw(
 
 # Main PCGen Release
 	35e
@@ -594,7 +580,7 @@ my @valid_system_game_modes  = qw(
 	CMP_HARP
 	SovereignStoneD20
 
-);
+); };
 
 my @valid_system_stats		= qw(
 	STR DEX CON INT WIS CHA NOB FAM PFM
@@ -5515,13 +5501,12 @@ for my $file (@files_to_parse_sorted) {
 
 		# The first line of the new file will be a comment line.
 		print {$write_fh} "$today -- reformated by $SCRIPTNAME v$VERSION\n"
-		if $cl_options{output_path} || ( *NEWFILE eq *STDOUT );
 
 		# We print the result
 		LINE:
 		for my $line ( @{$newlines_ref} ) {
 			#$line =~ s/\s+$//;
-			print {$write_fh} "$line\n" if $cl_options{output_path} || ( *NEWFILE eq *STDOUT );
+			print {$write_fh} "$line\n" if $cl_options{output_path};
 		}
 
 		close $write_fh if $cl_options{output_path};
