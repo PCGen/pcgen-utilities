@@ -5501,13 +5501,12 @@ for my $file (@files_to_parse_sorted) {
 
 		# The first line of the new file will be a comment line.
 		print {$write_fh} "$today -- reformated by $SCRIPTNAME v$VERSION\n"
-		if $cl_options{output_path} || ( *NEWFILE eq *STDOUT );
 
 		# We print the result
 		LINE:
 		for my $line ( @{$newlines_ref} ) {
 			#$line =~ s/\s+$//;
-			print {$write_fh} "$line\n" if $cl_options{output_path} || ( *NEWFILE eq *STDOUT );
+			print {$write_fh} "$line\n" if $cl_options{output_path};
 		}
 
 		close $write_fh if $cl_options{output_path};
