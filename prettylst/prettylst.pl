@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 
-# * Copyright
-
 # Copyright 2002 to 2006 by Eric Beaudoin <beaudoer@videotron.ca>.
 # Copyright 2006 to 2007 by Andrew McDougall <tir.gwaith@gmail.com>
 # Copyright 2008 by Phillip Ryan <philryan49@hotmail.com>
