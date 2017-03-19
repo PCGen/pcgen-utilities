@@ -22,7 +22,7 @@
 
 use 5.008_001;				# Perl 5.8.1 or better is now mandantory
 use strict;
-# use warnings;
+use warnings;
 use Fatal qw( open close );		# Force some built-ins to die on error
 use English qw( -no_match_vars );	# No more funky punctuation variables
 
@@ -89,6 +89,7 @@ sub warn_deprecate;
 sub record_bioset_tags;
 sub generate_bioset_files;
 sub generate_css;
+sub normalize_file;
 
 # File handles for the Export Lists
 my %filehandle_for;
@@ -560,7 +561,8 @@ my @valid_system_alignments  = qw( LG  LN  LE  NG  TN  NE  CG  CN  CE  NONE  Dei
 
 my @valid_system_check_names = qw( Fortitude Reflex Will );
 
-my @valid_system_game_modes  = qw(
+
+my @valid_system_game_modes  = do { no warnings 'qw'; qw(
 
 # Main PCGen Release
 	35e
@@ -594,7 +596,7 @@ my @valid_system_game_modes  = qw(
 	CMP_HARP
 	SovereignStoneD20
 
-);
+); };
 
 my @valid_system_stats		= qw(
 	STR DEX CON INT WIS CHA NOB FAM PFM
