@@ -5500,7 +5500,7 @@ for my $file (@files_to_parse_sorted) {
 		}
 
 		# The first line of the new file will be a comment line.
-		print {$write_fh} "$today -- reformated by $SCRIPTNAME v$VERSION\n"
+		print {$write_fh} "$today -- reformated by $SCRIPTNAME v$VERSION\n";
 
 		# We print the result
 		LINE:
