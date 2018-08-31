@@ -2964,6 +2964,7 @@ my %master_order = (
 		'FAVCLASS',
 		'XTRASKILLPTSPERLVL',
 		'STARTFEATS',
+		'FACT:*',
 		'SIZE',
 		'MOVE',
 		'MOVECLONE',
@@ -3828,10 +3829,11 @@ my %column_with_no_tag = (
 
 );
 
-
+# Added FACT:Basesize despite the fact that this appears to be unused arw - 20180830
 my %token_FACT_tag = map { $_ => 1 } (
 	'FACT:Abb',
 	'FACT:AppliedName',
+	'FACT:Basesize',
 	'FACT:ClassType',
 	'FACT:SpellType',
 	'FACT:Symbol',
@@ -4706,9 +4708,10 @@ my %tagheader = (
 
 	'RACE' => {
 		'000RaceName'		=> '# Race Name',
-		'FAVCLASS'			=> 'Favored Class',
-		'SKILLMULT'			=> 'Skill Multiplier',
-		'MONCSKILL'			=> 'Racial HD Class Skills',
+		'FACT'			=> 'Base size',
+		'FAVCLASS'		=> 'Favored Class',
+		'SKILLMULT'		=> 'Skill Multiplier',
+		'MONCSKILL'		=> 'Racial HD Class Skills',
 		'MONCCSKILL'		=> 'Racial HD Cross-class Skills',
 		'MONSTERCLASS'		=> 'Monster Class Name and Starting Level',
 	},
@@ -5833,7 +5836,7 @@ if ( $cl_options{xcheck} ) {
 		for my $linetype ( sort keys %missing_headers ) {
 		if ($firsttime) {
 			print STDERR "\n================================================================\n";
-			print STDERR "List of TAGs whitout defined header in \%tagheader\n";
+			print STDERR "List of TAGs without defined header in \%tagheader\n";
 			print STDERR "----------------------------------------------------------------\n";
 		}
 
