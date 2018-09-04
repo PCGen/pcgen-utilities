@@ -9181,8 +9181,19 @@ BEGIN {
 			for my $entry ( split '\|', $tag_value ) {
 				my @parameters = split ',', $entry;
 
-				# Must have 4 parameters
-				if ( scalar @parameters == 4 ) {
+				my $NumberOfParams = scalar @parameters;
+
+				# must have 4 or 5 parameters
+				if ($NumberOfParams == 5 or $NumberOfParams == 4) { 
+				
+					# If Parameter 5 exists, it must be an SPROP
+					if (defined $parameters[4]) {
+						$logging->ewarn( NOTICE,
+							qq{5th parameter should be an SPROP in "NATURALATTACKS:$entry"},
+							$file_for_error,
+							$line_for_error
+						) unless $parameters[4] =~ /^SPROP=/;
+					}
 
 					# Parameter 3 is a number
 					$logging->ewarn( NOTICE,
