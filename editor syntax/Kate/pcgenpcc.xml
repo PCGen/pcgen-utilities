@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="PCGen PCC file" section="Other" version="1.01" kateversion="3.4" extensions="*.pcc" mimetype="text/pcgen" author="Michael W. Fender (fluxxdog@gmail.com)" license="GPL">
+<language name="PCC file" section="PCGen" extensions="*.pcc" version="2" kateversion="2.3" mimetype="text/pcgen" author="Stefan Radermacher (pcgen@zaister.de)" license="GPL">
 	<highlighting>
 		<list name="pcc-tags">
 			<item> ABILITY </item>
@@ -22,6 +22,7 @@
 			<item> EQUIPMOD </item>
 			<item> EXCLUDE </item>
 			<item> FEAT </item>
+			<item> FORWARDREF </item>
 			<item> GAMEMODE </item>
 			<item> GENRE </item>
 			<item> HELP </item>
@@ -64,12 +65,12 @@
 			<item> WEAPONPROF </item>
 		</list>
 		<contexts>
-			<context attribute="Normal Text" lineEndContext="Normal" name="Normal" >
+			<context attribute="Normal Text" lineEndContext="#stay" name="Normal" >
 				<IncludeRules context="KeepNeat" />
 				<keyword attribute="PCCTags" String="pcc-tags" />
 				<RegExpr attribute="Comment" String="^#.*$" />
 			</context>
-			<context name="KeepNeat" >
+			<context name="KeepNeat" attribute="KeepNeat" lineEndContext="#stay" >
 				<RegExpr String="[]:=,.()[]" attribute="Normal Text" />
 				<RegExpr attribute="PRETags" String="[!]*PRE[\w]*" context="PRExxx" />
 				<RegExpr attribute="Normal Text" context="Normal" String="[\t]" />
@@ -86,8 +87,10 @@
 			<itemData name="PRETags" defStyleNum="dsString" bold="1" />
 			<itemData name="Comment" defStyleNum="dsComment" />
 		</itemDatas>
+	</highlighting>
+	<general>
 		<comments>
 			<comment name="singleLine" start="#" />
 		</comments>
-	</highlighting>
+	</general>
 </language>
