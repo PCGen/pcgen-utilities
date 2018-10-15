@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd" >
-<language name="PCGen data file" section="Other" version="1.01c" kateversion="3.4" extensions="*.lst" mimetype="text/pcgen" author="Michael W. Fender (fluxxdog@gmail.com)" license="GPL" >
+<language name="LST Data File" section="PCGen" extensions="*.lst" version="2" kateversion="2.3" mimetype="text/pcgen" author="Stefan Radermacher (pcgen@zaister.de)" license="GPL" >
 	<highlighting>
 		<list name="tags" >
 			<item> ABB </item>
@@ -336,9 +336,9 @@
 			<item> EXPORT </item>
 		</list>
 		<contexts>
-			<context attribute="Normal Text" lineEndContext="Normal" name="Normal" >
+			<context attribute="Normal Text" lineEndContext="#stay" name="Normal">
 				<RegExpr attribute="Comment" String="^#.*$" />
-				<keyword String="tags" attribute="Tags" />
+				<keyword String="tags" attribute="Tags" context="Tags" />
 				<keyword String="tagswithyesno" attribute="Tags" context="TagsWithYN" />
 				<keyword String="adjustments" attribute="Tags" context="Adjusters" />
 				<keyword String="colortext" attribute="Tags" context="Descriptive" />
@@ -354,7 +354,7 @@
 				<IncludeRules context="KeepNeat" />
 				<DetectChar char="|" attribute="Pipes" />
 			</context>
-			<context name="KeepNeat" >
+			<context name="KeepNeat" attribute="KeepNeat" lineEndContext="#stay" >
 				<RegExpr context="Normal" String="[\t]" />
 				<StringDetect String="Prestige" context="#stay" />
 				<keyword String="modifiers" attribute="Altered" />
@@ -362,7 +362,7 @@
 				<AnyChar String="]/=,.()[+*%!:^{}-]" attribute="Normal Text" />
 				<RegExpr attribute="Dice" String="[\d]+d[\d]+" />
 				<keyword String="typers" attribute="Tags" context="Typing"/>
-				<keyword Context="Altered" string="modifiers" />
+				<keyword attribute="Altered" String="modifiers" />
 				<Int attribute="Numbers" />
 				<keyword attribute="Numbers" String="globalvariables" />
 			</context>
@@ -394,7 +394,7 @@
 				<DetectChar char="|" attribute="Pipes" context="Variables" />
 			</context>
 			<context name="Descriptive" attribute="Descrpitive" lineEndContext="Normal" >
-				<DetectString String="CASTERLEVEL" attribute="Numbers" />
+				<StringDetect String="CASTERLEVEL" attribute="Numbers" />
 				<DetectChar char="|" attribute="Pipes" context="Variables" />
 				<RegExpr String="[%][\d]*" attribute="Sub-Tags" />
 				<IncludeRules context="KeepNeat" />
@@ -433,7 +433,7 @@
 				<DetectChar char="|" attribute="Pipes" context="Variables" />
 				<IncludeRules context="KeepNeat" />
 			</context>
-			<context name="TagsWithYN" lineEndContext="Normal" >
+			<context name="TagsWithYN" attribute="Sub-Tags" lineEndContext="Normal" >
 				<IncludeRules context="KeepNeat" />
 				<keyword String="yesno" attribute="Sub-Tags" context="Normal" />
 			</context>
@@ -442,8 +442,8 @@
 				<DetectChar char="|" attribute="Pipes" context="#pop" />
 			</context>
 			<context name="Variables" attribute="Variables" lineEndContext="Normal" >
-				<keyword string="globalvariables"  attribute="Numbers" />
-				<RegExpr string="COUNT\[[\w]+([\W][\w]+)*\]" attribute="Numbers" />
+				<keyword String="globalvariables"  attribute="Numbers" />
+				<RegExpr String="COUNT\[[\w]+([\W][\w]+)*\]" attribute="Numbers" />
 				<RegExpr String="WEIGHT\.[\w]+" attribute="Numbers" />
 				<IncludeRules context="KeepNeat" />
 				<DetectChar char="|" attribute="Pipes" />
@@ -464,8 +464,10 @@
 			<itemData name="Keywords" defStyleNum="dsOthers" />
 			<itemData name="Dice" defStyleNum="dsBaseN" />
 		</itemDatas>
+	</highlighting>
+	<general>
 		<comments>
 			<comment name="singleLine" start="#" />
 		</comments>
-	</highlighting>
+	</general>
 </language>
