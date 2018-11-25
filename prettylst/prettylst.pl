@@ -3,7 +3,7 @@
 # Copyright 2002 to 2006 by Eric Beaudoin <beaudoer@videotron.ca>.
 # Copyright 2006 to 2007 by Andrew McDougall <tir.gwaith@gmail.com>
 # Copyright 2008 by Phillip Ryan <philryan49@hotmail.com>
-# Copyright 2009 to 2014 by Andrew Maitland <drew0500@yahoo.com>
+# Copyright 2009 to 2018 by Andrew Maitland <drew0500@yahoo.com>
 
 # All rights reserved.  You can redistribute and/or modify
 # this program under the same terms as Perl itself.
@@ -24,11 +24,11 @@ use warnings;
 use Fatal qw( open close );		# Force some built-ins to die on error
 use English qw( -no_match_vars );	# No more funky punctuation variables
 
-my $VERSION		= "6.06.00";
-my $VERSION_DATE	= "2015-12-15";
+my $VERSION		= "6.08.00";
+my $VERSION_DATE	= "2018-11-16";
 my ($PROGRAM_NAME)	= "PCGen PrettyLST";
 my ($SCRIPTNAME)	= ( $PROGRAM_NAME =~ m{ ( [^/\\]* ) \z }xms );
-my $VERSION_LONG	= "$SCRIPTNAME version: $VERSION -- $VERSION_DATE";
+my $VERSION_LONG	= "# $SCRIPTNAME version: $VERSION -- $VERSION_DATE";
 
 my $today = localtime;
 our $logging;
@@ -113,11 +113,14 @@ my %validfiletype = (
 	'SHIELDPROF'	=> \&FILETYPE_parse,
 	'VARIABLE'		=> \&FILETYPE_parse,
 	'DATACONTROL'		=> \&FILETYPE_parse,
-	'GLOBALMOD'		=> \&FILETYPE_parse,
+	'GLOBALMODIFIER'		=> \&FILETYPE_parse,
 	'#EXTRAFILE'	=> 1,
 	'SAVE'		=> \&FILETYPE_parse,
 	'STAT'		=> \&FILETYPE_parse,
 	'ALIGNMENT'		=> \&FILETYPE_parse,
+	'SIZE'		=> \&FILETYPE_parse,
+	'DYNAMIC'		=> \&FILETYPE_parse,
+
 );
 
 # The file type that will be rewritten.
@@ -154,6 +157,8 @@ my %writefiletype = (
 	'SAVE'		=> 1,
 	'STAT'		=> 1,
 	'ALIGNMENT'		=> 1,
+	'SIZE'		=> 1,
+	'DYNAMIC'		=> 1,
 );
 
 # The active conversions
@@ -551,18 +556,24 @@ my @valid_system_game_modes  = do { no warnings 'qw'; qw(
 # Main PCGen Release
 	35e
 	3e
-	Deadlands
+	5e
 	Darwins_World_2
+	Deadlands
 	FantasyCraft
 	Gaslight
+	Immortal
 	Killshot
 	LoE
 	Modern
+	OSRIC
 	Pathfinder
+	Pathfinder2
+	Pathfinder_PFS
+	Sagaborn
 	Sidewinder
 	Spycraft
+	Starfinder
 	Xcrawl
-	OSRIC
 
 # Third Party/Homebrew Support
 	DnD
@@ -669,6 +680,7 @@ my %valid_game_modes = map { $_ => 1 } (
 	'Starwars_Edge',
 	'T20',
 	'Traveller20',
+	'Starfinder',
 
 );
 
@@ -1522,9 +1534,9 @@ my %master_file_type = (
 			ValidateKeep	=> YES,
 		},
 	],
-	GLOBALMOD => [
+	GLOBALMODIFIER => [
 		\%SOURCE_file_type_def,
-		{ Linetype	=> 'GLOBALMOD',
+		{ Linetype	=> 'GLOBALMODIFIER',
 			RegEx			=> qr(^([^\t:]+)),
 			Mode			=> MAIN,
 			Format		=> BLOCK,
@@ -1563,6 +1575,17 @@ my %master_file_type = (
 			ValidateKeep	=> YES,
 		},
 	],
+	DYNAMIC => [
+		\%SOURCE_file_type_def,
+		{ Linetype	=> 'DYNAMIC',
+			RegEx			=> qr(^([^\t:]+)),
+			Mode			=> MAIN,
+			Format		=> BLOCK,
+			Header		=> BLOCK_HEADER,
+			ValidateKeep	=> YES,
+		},
+	],
+
 
 );
 
@@ -2950,6 +2973,11 @@ my %master_order = (
 		'TEMPLATE',
 		'WEAPONPROF',
 		'#EXTRAFILE',		# Fix #EXTRAFILE so it recognizes #EXTRAFILE references (so OGL is a known referenced file again.)
+		'SIZE',
+		'DATATABLE',
+		'DYNAMIC',
+		'GLOBALMODIFIER',
+		'VARIABLE',
 
 		#These tags are normal file global tags....
 		@double_PCC_tags,		#Global tags that are double - $tag does not end with ':'
@@ -3463,6 +3491,7 @@ my %master_order = (
 		'LANGAUTO.CLEAR',	# Deprecated - Remove 6.0
 		'LANGAUTO:*',		# Deprecated - Remove 6.0
 		'ADD:SPECIAL',		# Deprecated - Remove 5.16 - Special abilities are now set using hidden feats 0r Abilities.
+		'DONOTADD:SKILLPOINTS',
 	],
 
 	'SWITCHRACE' => [
@@ -3569,6 +3598,7 @@ my %master_order = (
 		'DESC:*',
 		'TEMPDESC',
 		'TEMPBONUS',
+		'TEMPVALUE',
 		'SPELL:*',		# Deprecated 5.x.x - Remove 6.0 - use SPELLS
 		'ADD:SPECIAL',		# Deprecated - Remove 5.16 - Special abilities are now set using hidden feats 0r Abilities.
 #		'HEIGHT',		# Deprecated
@@ -3612,6 +3642,10 @@ my %master_order = (
 		'000GlobalmonName',
 		'EXPLANATION',			
 	],
+	'DYNAMIC' => [
+		'000DynamicName',
+		'EXPLANATION',			
+	],
 
 	'ALIGNMENT' => [
 		'000AlignmentName',
@@ -3632,6 +3666,7 @@ my %master_order = (
 		'DEFINE',			
 		@Global_BONUS_Tags,			
 		'ABILITY',			
+		'MODIFY',
 	],
 
 	'SAVE' => [
@@ -3825,6 +3860,14 @@ my %column_with_no_tag = (
 	'STAT' => [
 		'000StatName',
 	],
+	'DYNAMIC' => [
+		'000DynamicName',
+	],
+	'SIZE' => [
+		'000SizeName',
+	],
+
+
 
 );
 
@@ -5500,7 +5543,7 @@ for my $file (@files_to_parse_sorted) {
 		}
 
 		# The first line of the new file will be a comment line.
-		print {$write_fh} "$today -- reformated by $SCRIPTNAME v$VERSION\n";
+		print {$write_fh} "#  $today -- reformated by $SCRIPTNAME v$VERSION\n";
 
 		# We print the result
 		LINE:
