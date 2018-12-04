@@ -3931,7 +3931,6 @@ my %token_FACT_tag = map { $_ => 1 } (
 	'Appearance',
 	'RateOfFire',
 	'CompMaterial',
-	'Prerequisite',
 );
 
 my %token_FACTSET_tag = map { $_ => 1 } (
@@ -4040,14 +4039,14 @@ my %token_QUALIFY_tag = map { $_ => 1 } (
 );
 
 my %token_QUALITY_tag = map { $_ => 1 } (
-	'QUALITY:Capacity',
-	'QUALITY:Usage',
-	'QUALITY:Aura',
-	'QUALITY:Caster Level',
-	'QUALITY:Slot',
-	'QUALITY:Construction Craft DC',
-	'QUALITY:Construction Cost',
-	'QUALITY:Construction Requirements',
+	'Capacity',
+	'Usage',
+	'Aura',
+	'Caster Level',
+	'Slot',
+	'Construction Craft DC',
+	'Construction Cost',
+	'Construction Requirements',
 );
 
 my %token_BONUS_MONSKILLPTS_types = map { $_ => 1 } (
