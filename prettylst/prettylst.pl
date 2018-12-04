@@ -20,7 +20,7 @@
 
 use 5.008_001;				# Perl 5.8.1 or better is now mandantory
 use strict;
-use warnings;
+ use warnings;
 use Fatal qw( open close );		# Force some built-ins to die on error
 use English qw( -no_match_vars );	# No more funky punctuation variables
 
@@ -1883,6 +1883,7 @@ my @SOURCE_Tags = (
 	'SOURCEPAGE:.CLEAR',
 	'SOURCEPAGE',
 	'SOURCELINK',
+	'SOURCEDATE',
 );
 
 my @QUALIFY_Tags = (
@@ -1898,6 +1899,18 @@ my @QUALIFY_Tags = (
 	'QUALIFY:SKILL',
 	'QUALIFY:TEMPLATE',
 	'QUALIFY:WEAPONPROF',
+);
+
+my @QUALITY_Tags = (
+	'QUALITY:Capacity:*',
+	'QUALITY:Usage:*',
+	'QUALITY:Aura:*',
+	'QUALITY:Caster Level:*',
+	'QUALITY:Slot:*',
+	'QUALITY:Construction Craft DC:*',
+	'QUALITY:Construction Cost:*',
+	'QUALITY:Construction Requirements:*',
+	'QUALITY:*',
 );
 
 # [ 1956340 ] Centralize global BONUS tags
@@ -2002,6 +2015,33 @@ my @double_PCC_tags = (
 	'BONUS:WIELDCATEGORY:*',	
 );	
 
+my @Global_FACT_Tags = (
+	'FACT:Abb:*',
+	'FACT:AppliedName:*',
+	'FACT:ClassType:*',
+	'FACT:SpellType:*',
+	'FACT:Symbol:*',
+	'FACT:Worshippers:*',
+	'FACT:Title:*',
+	'FACT:Appearance:*',
+	'FACT:RateOfFire:*',
+	'FACT:CompMaterial:*',
+	'FACT:*',
+);
+
+my @Global_FACTSET_Tags = (
+	'FACTSET:Pantheon:*',
+	'FACTSET:Race:*',
+	'FACTSET:*',
+);
+
+my @INFO_Tags = (
+	'INFO:Prerequisite:*',
+	'INFO:Normal:*',
+	'INFO:Special:*',
+	'INFO:*',
+);
+
 
 # Order for the tags for each line type.
 my %master_order = (
@@ -2015,6 +2055,7 @@ my %master_order = (
 		'TYPE:.CLEAR',
 		'TYPE:*',
 		'VISIBLE',
+		'INFO:Prerequisite',
 		@PRE_Tags,
 		@QUALIFY_Tags,
 		'SERVESAS',
@@ -2074,6 +2115,8 @@ my %master_order = (
 		'NATURALATTACKS',
 		'ASPECT:*',
 		'BENEFIT:*',
+		'INFO:Normal',
+		'INFO:Special',
 		'TEMPDESC',
 		'SPELLKNOWN:CLASS:*',
 		'SPELLKNOWN:DOMAIN:*',
@@ -2384,8 +2427,8 @@ my %master_order = (
 		'FOLLOWERALIGN',
 		'DESCISPI',
 		'DESC',
-		'FACT:*',
-		'FACTSET:*',
+		@Global_FACT_Tags,
+		@Global_FACTSET_Tags,
 		'DEITYWEAP',
 		'ALIGN',
 		@SOURCE_Tags,
@@ -2540,7 +2583,7 @@ my %master_order = (
 		'BONUS:ESIZE:*',
 		'BONUS:ITEMCOST:*',
 		'BONUS:WEAPON:*',
-		'QUALITY:*',		# [ 1593868 ] New equipment tag "QUALITY"
+		@QUALITY_Tags,		# [ 1593868 ] New equipment tag "QUALITY"
 		'SPROP:.CLEAR',
 		'SPROP:*',
 		'SAB:.CLEAR',
@@ -2570,6 +2613,7 @@ my %master_order = (
 
 	'EQUIPMOD' => [
 		'000ModifierName',
+		'SORTKEY',
 		'KEY',
 		'NAMEISPI',
 		'OUTPUTNAME',
@@ -2699,6 +2743,7 @@ my %master_order = (
 		'NATURALATTACKS',
 		'ASPECT:*',
 		'BENEFIT:*',
+		@INFO_Tags,
 		'TEMPDESC',
 		'SPELLKNOWN:CLASS:*',
 		'SPELLKNOWN:DOMAIN:*',
@@ -3170,6 +3215,7 @@ my %master_order = (
 		'VARIANTS:.CLEAR',
 		'VARIANTS:*',
 		'COMPS',
+		'FACT:CompMaterial',
 		'CASTTIME:.CLEAR',
 		'CASTTIME:*',
 		'RANGE:.CLEAR',
@@ -3874,23 +3920,30 @@ my %column_with_no_tag = (
 
 # Added FACT:Basesize despite the fact that this appears to be unused arw - 20180830
 my %token_FACT_tag = map { $_ => 1 } (
-	'FACT:Abb',
-	'FACT:AppliedName',
-	'FACT:Basesize',
-	'FACT:ClassType',
-	'FACT:SpellType',
-	'FACT:Symbol',
-	'FACT:Worshippers',
-	'FACT:Title',
-	'FACT:Appearance',
-	'FACT:RateOfFire',
+	'Abb',
+	'AppliedName',
+	'BaseSize',
+	'ClassType',
+	'SpellType',
+	'Symbol',
+	'Worshippers',
+	'Title',
+	'Appearance',
+	'RateOfFire',
+	'CompMaterial',
+	'Prerequisite',
 );
 
 my %token_FACTSET_tag = map { $_ => 1 } (
-	'FACTSET:Pantheon',
-	'FACTSET:Race',
+	'Pantheon',
+	'Race',
 );
 
+my %token_INFO_tag = map { $_ => 1 } (
+	'Prerequisite',
+	'Normal',
+	'Special',
+);
 
 my %token_ADD_tag = map { $_ => 1 } (
 	'ADD:.CLEAR',
@@ -3984,6 +4037,17 @@ my %token_QUALIFY_tag = map { $_ => 1 } (
 	'SKILL',
 	'TEMPLATE',
 	'WEAPONPROF',
+);
+
+my %token_QUALITY_tag = map { $_ => 1 } (
+	'QUALITY:Capacity',
+	'QUALITY:Usage',
+	'QUALITY:Aura',
+	'QUALITY:Caster Level',
+	'QUALITY:Slot',
+	'QUALITY:Construction Craft DC',
+	'QUALITY:Construction Cost',
+	'QUALITY:Construction Requirements',
 );
 
 my %token_BONUS_MONSKILLPTS_types = map { $_ => 1 } (
@@ -4242,7 +4306,7 @@ my %tagheader = (
 		'BONUS:ABILITYPOOL'			=> 'Bonus Ability Pool',
 		'BONUS:CASTERLEVEL'			=> 'Caster level',
 		'BONUS:CHECKS'				=> 'Save checks bonus',
-		'BONUS:CONCENTRATION'				=> 'Concentration bonus',
+		'BONUS:CONCENTRATION'		=> 'Concentration bonus',
 		'BONUS:SAVE'				=> 'Save bonus',
 		'BONUS:COMBAT'				=> 'Combat bonus',
 		'BONUS:DAMAGE'				=> 'Weapon damage bonus',
@@ -4301,6 +4365,7 @@ my %tagheader = (
 		'CLASSES'					=> 'Classes',
 		'COMPANIONLIST'				=> 'Allowed Companions',
 		'COMPS'						=> 'Components',
+		'FACT:CompMaterial'			=> 'Material/Focus',
 		'CONTAINS'					=> 'Contains',
 		'COST'						=> 'Cost',
 		'CR'						=> 'Challenge Rating',
@@ -4349,6 +4414,10 @@ my %tagheader = (
 		'HITDICEADVANCEMENT'		=> 'Hit Dice Advancement',
 		'HITDICESIZE'				=> 'Hit Dice Size',
 		'ITEM'						=> 'Item',
+		'INFO'						=> 'Information',
+		'INFO:Normal'				=> 'Normal without Feat',
+		'INFO:Prerequisite'			=> 'Prerequisite',
+		'INFO:Special'				=> 'Special Feat Information',
 		'KEY'						=> 'Unique Key',
 		'KIT'						=> 'Apply Kit',
 		'KNOWN'						=> 'Known',
@@ -4377,6 +4446,7 @@ my %tagheader = (
 		'OUTPUTNAME'				=> 'Output Name',
 		'PAGEUSAGE'					=> 'Page Usage',				# [ 1450980 ] New Spellbook tags
 		'PANTHEON'					=> 'Pantheon',
+		'FACTSET:Pantheon'			=> 'Pantheon',
 		'PPCOST'					=> 'Power Points',			# [ 1814797 ] PPCOST needs to added as valid tag in SPELLS
 		'PRE:.CLEAR'				=> 'Clear Prereq.',
 		'PREABILITY'				=> 'Required Ability',
@@ -4664,26 +4734,34 @@ my %tagheader = (
 		'DOMAINS'			=> 'Domains',
 		'FOLLOWERALIGN'		=> 'Clergy AL',
 		'DESC'			=> 'Description of Deity/Title',
-		'FACT:SYMBOL'			=> 'Holy Item',
+		'FACT:Symbol'			=> 'Holy Item',
 		'SYMBOL'			=> 'Holy Item',
 		'DEITYWEAP'			=> 'Deity Weapon',
-		'FACT:TITLE'			=> 'Deity Title',
+		'FACT:Title'			=> 'Deity Title',
 		'TITLE'			=> 'Deity Title',
-		'FACTSET:WORSHIPPERS'		=> 'Usual Worshippers',
+		'FACTSET:Worshippers'		=> 'Usual Worshippers',
 		'WORSHIPPERS'		=> 'Usual Worshippers',
-		'FACT:APPEARANCE'		=> 'Deity Appearance',
+		'FACT:Appearance'		=> 'Deity Appearance',
 		'APPEARANCE'		=> 'Deity Appearance',
 		'ABILITY'			=> 'Granted Ability',
 	},
 
 	'EQUIPMENT' => {
-		'000EquipmentName'	=> '# Equipment Name',
-		'BASEITEM'			=> 'Base Item for EQMOD',
-		'RESIZE'			=> 'Can be Resized',
-		'QUALITY'			=> 'Quality and value',
-		'SLOTS'				=> 'Slot Needed',
-		'WIELD'				=> 'Wield Category',
-		'MODS'				=> 'Requires Modification?',
+		'000EquipmentName'					=> '# Equipment Name',
+		'BASEITEM'							=> 'Base Item for EQMOD',
+		'RESIZE'							=> 'Can be Resized',
+		'QUALITY:Capacity'					=> 'Technological item maximum charge',
+		'QUALITY:Usage'						=> 'Technological item discharge rate',
+		'QUALITY:Aura'						=> 'Magic item aura',
+		'QUALITY:Caster Level'				=> 'Magic item caster level',
+		'QUALITY:Slot'						=> 'Required equipment slot',
+		'QUALITY:Construction Craft DC'		=> 'Technological item craft DC',
+		'QUALITY:Construction Cost'			=> 'Item construction cost',
+		'QUALITY:Construction Requirements'	=> 'Required feats and spells',
+		'QUALITY'							=> 'Quality and value',
+		'SLOTS'								=> 'Slot Needed',
+		'WIELD'								=> 'Wield Category',
+		'MODS'								=> 'Requires Modification?',
 	},
 
 	'EQUIPMOD' => {
@@ -4751,10 +4829,10 @@ my %tagheader = (
 
 	'RACE' => {
 		'000RaceName'		=> '# Race Name',
-		'FACT'			=> 'Base size',
-		'FAVCLASS'		=> 'Favored Class',
-		'SKILLMULT'		=> 'Skill Multiplier',
-		'MONCSKILL'		=> 'Racial HD Class Skills',
+		'FACT:BaseSize'				=> 'Base size',
+		'FAVCLASS'			=> 'Favored Class',
+		'SKILLMULT'			=> 'Skill Multiplier',
+		'MONCSKILL'			=> 'Racial HD Class Skills',
 		'MONCCSKILL'		=> 'Racial HD Cross-class Skills',
 		'MONSTERCLASS'		=> 'Monster Class Name and Starting Level',
 	},
@@ -5021,6 +5099,7 @@ if ($cl_options{input_path}) {
 		my $SOURCELONG_found	= q{};		#
 		my $SOURCESHORT_found   = q{};		#
 		my $LST_found		= NO;
+		my $CVS_tag_found		= NO;
 		my @pcc_lines		= ();
 		my %found_filetype;
 		my $continue		= YES;
@@ -5130,6 +5209,11 @@ if ($cl_options{input_path}) {
 				delete $filelist_notpcc{$lstfile} if exists $filelist_notpcc{$lstfile};
 				$LST_found = YES;
 			}
+			elsif ( $tag =~ /^\#/ ) {
+
+				# It is a comment line
+				$CVS_tag_found = YES if /^\#.*CVS.*Revision/i;
+			}
 			elsif ( $valid_tags{'PCC'}{$tag} ) {
 
 				# All the tags that do not have file should be cought here
@@ -5202,6 +5286,7 @@ if ($cl_options{input_path}) {
 						# prevent the file from being written.
 						$continue		= NO;
 						$must_write	= NO;
+						$CVS_tag_found  = YES;
 					}
 				}
 				elsif ( $tag eq 'BOOKTYPE' || $tag eq 'TYPE' ) {
@@ -5223,6 +5308,12 @@ if ($cl_options{input_path}) {
 					$GAMEMODE_found = $value;
 					$must_write	= YES;
 				}
+			}
+		}
+		elsif ( $_ =~ / \A [#] /xms ) {
+			# It is a comment line
+			if ( / \A [#] .* CVS .* Revision /xmsi ) {
+				$CVS_tag_found = YES;
 			}
 		}
 		elsif ( / <html> /xmsi ) {
@@ -5271,7 +5362,7 @@ if ($cl_options{input_path}) {
 		}
 
 		# Do we copy the .PCC???
-		if ( $cl_options{output_path} && ( $must_write ) && $writefiletype{"PCC"} ) {
+		if ( $cl_options{output_path} && ( $must_write || !$CVS_tag_found ) && $writefiletype{"PCC"} ) {
 			my $new_pcc_file = $pcc_file_name;
 			$new_pcc_file =~ s/$cl_options{input_path}/$cl_options{output_path}/i;
 
@@ -5282,6 +5373,11 @@ if ($cl_options{input_path}) {
 
 			# We keep track of the files we modify
 			push @modified_files, $pcc_file_name;
+
+			# We add a CVS revision number is not present
+			print {$new_pcc_fh}
+				"# $today -- reformated by $SCRIPTNAME v$VERSION\n"
+				if $pcc_lines[0] !~ / \A [#] .* reformated /xmsi;
 
 			for my $line (@pcc_lines) {
 				print {$new_pcc_fh} "$line\n";
@@ -5467,6 +5563,17 @@ for my $file (@files_to_parse_sorted) {
 		next FILE_TO_PARSE;
 	}
 
+	# If the first line is the prettylst comment, we remove it.
+	my $cvs_line	= "";
+	my $cvs_present = 0;
+	if ( $lines[0] =~ /\# .* -- reformated by /i || $lines[0] =~ /\#.*CVS.*Revision/i ) {
+		$cvs_line	= $lines[0];
+		$lines[0]	= '#$$$ CVS comment $$$';
+		$cvs_present = 1;
+	}
+	$cvs_line = ( $cvs_line =~ /(\# cvs.*revision.*author.*?) -- /i )[0]
+			|| '# CVS $' . 'Revision: $ $' . 'Author: $';
+
 	# Read the full file into the @lines array
 	chomp(@lines);
 
@@ -5510,6 +5617,7 @@ for my $file (@files_to_parse_sorted) {
 
 		# First, we check if there are obvious resons not to write the new file
 		if (	!$numberofcf						# No extra CRLF char. were removed
+			&& $cvs_present						# CVS head was already present
 			&& scalar(@lines) == scalar(@$newlines_ref)	# Same number of lines
 		) {
 			# We assume the arrays are the same ...
@@ -5546,13 +5654,17 @@ for my $file (@files_to_parse_sorted) {
 		}
 
 		# The first line of the new file will be a comment line.
-		print {$write_fh} "#  $today -- reformated by $SCRIPTNAME v$VERSION\n";
+		print {$write_fh} "# $today -- reformated by $SCRIPTNAME v$VERSION\n"
+		#print {$write_fh} ""
+		if $cl_options{output_path} || ( *NEWFILE eq *STDOUT );
 
 		# We print the result
 		LINE:
 		for my $line ( @{$newlines_ref} ) {
+			next LINE if $line eq '#$$$ CVS comment $$$';
+
 			#$line =~ s/\s+$//;
-			print {$write_fh} "$line\n" if $cl_options{output_path};
+			print {$write_fh} "$line\n" if $cl_options{output_path} || ( *NEWFILE eq *STDOUT );
 		}
 
 		close $write_fh if $cl_options{output_path};
@@ -6034,7 +6146,7 @@ sub FILETYPE_parse {
 		$new_line =~ s/\x94/\"/g;
 		$new_line =~ s/\x95/*/g;
 		$new_line =~ s/\x96/-/g;
-		$new_line =~ s/\x97/-/g;
+		$new_line =~ s/\x97/--/g;
 		$new_line =~ s-\x98-<sup>~</sup>-g;
 		$new_line =~ s-\x99-<sup>TM</sup>-g;
 		$new_line =~ s/\x9B/>/g;
@@ -7142,6 +7254,105 @@ sub parse_tag {
 				);
 	}
 
+	if ( $tag eq 'FACT' ) {
+		my ($fact_type) = ( $value =~ /^([^=:|]+)/ );
+
+		if ( $fact_type && exists $token_FACT_tag{$fact_type} ) {
+
+			# Is it valid for the curent file type?
+			$tag .= ':' . $fact_type;
+			$value =~ s/^$fact_type(.*)/$1/;
+		}
+		elsif ($fact_type) {
+
+			# No valid fact type was found
+			$count_tags{"Invalid"}{"Total"}{"$tag:$fact_type"}++;
+			$count_tags{"Invalid"}{$linetype}{"$tag:$fact_type"}++;
+			$logging->ewarn( NOTICE,
+				qq{Invalid FACT:$fact_type tag "$tag_text" found in $linetype.},
+				$file_for_error,
+				$line_for_error
+			);
+			$no_more_error = 1;
+		}
+		else {
+			$count_tags{"Invalid"}{"Total"}{"FACT"}++;
+			$count_tags{"Invalid"}{$linetype}{"FACT"}++;
+			$logging->ewarn( NOTICE,
+				qq{Invalid FACT tag "$tag_text" found in $linetype},
+				$file_for_error,
+				$line_for_error
+			);
+			$no_more_error = 1;
+		}
+	}
+
+	if ( $tag eq 'FACTSET' ) {
+		my ($factset_type) = ( $value =~ /^([^=:|]+)/ );
+
+		if ( $factset_type && exists $token_FACTSET_tag{$factset_type} ) {
+
+			# Is it valid for the curent file type?
+			$tag .= ':' . $factset_type;
+			$value =~ s/^$factset_type(.*)/$1/;
+		}
+		elsif ($factset_type) {
+
+			# No valid factset type was found
+			$count_tags{"Invalid"}{"Total"}{"$tag:$factset_type"}++;
+			$count_tags{"Invalid"}{$linetype}{"$tag:$factset_type"}++;
+			$logging->ewarn( NOTICE,
+				qq{Invalid FACTSET:$factset_type tag "$tag_text" found in $linetype.},
+				$file_for_error,
+				$line_for_error
+			);
+			$no_more_error = 1;
+		}
+		else {
+			$count_tags{"Invalid"}{"Total"}{"FACTSET"}++;
+			$count_tags{"Invalid"}{$linetype}{"FACTSET"}++;
+			$logging->ewarn( NOTICE,
+				qq{Invalid FACTSET tag "$tag_text" found in $linetype},
+				$file_for_error,
+				$line_for_error
+			);
+			$no_more_error = 1;
+		}
+	}
+
+	if ( $tag eq 'INFO' ) {
+		my ($info_type) = ( $value =~ /^([^=:|]+)/ );
+
+		if ( $info_type && exists $token_INFO_tag{$info_type} ) {
+
+			# Is it valid for the curent file type?
+			$tag .= ':' . $info_type;
+			$value =~ s/^$info_type(.*)/$1/;
+		}
+		elsif ($info_type) {
+
+			# No valid info type was found
+			$count_tags{"Invalid"}{"Total"}{"$tag:$info_type"}++;
+			$count_tags{"Invalid"}{$linetype}{"$tag:$info_type"}++;
+			$logging->ewarn( NOTICE,
+				qq{Invalid INFO:$info_type tag "$tag_text" found in $linetype.},
+				$file_for_error,
+				$line_for_error
+			);
+			$no_more_error = 1;
+		}
+		else {
+			$count_tags{"Invalid"}{"Total"}{"INFO"}++;
+			$count_tags{"Invalid"}{$linetype}{"INFO"}++;
+			$logging->ewarn( NOTICE,
+				qq{Invalid INFO tag "$tag_text" found in $linetype},
+				$file_for_error,
+				$line_for_error
+			);
+			$no_more_error = 1;
+		}
+	}
+
 	# Special cases like ADD:... and BONUS:...
 	if ( $tag eq 'ADD' ) {
 		my ( $type, $addtag, $therest, $add_count )
@@ -7207,6 +7418,166 @@ sub parse_tag {
 			$no_more_error = 1;
 		}
 	}
+
+	if ( $tag eq 'QUALITY' ) {
+		my ($quality_type) = ( $value =~ /^([^=:|]+)/ );
+		if ( $quality_type && exists $token_QUALITY_tag{$quality_type} ) {
+
+			# Is it valid for the curent file type?
+			$tag .= ':' . $quality_type;
+			$value =~ s/^$quality_type(.*)/$1/;
+		}
+		elsif ($quality_type) {
+
+			# No valid quality type was found
+			$count_tags{"Invalid"}{"Total"}{"$tag:$quality_type"}++;
+			$count_tags{"Invalid"}{$linetype}{"$tag:$quality_type"}++;
+			$logging->ewarn( NOTICE,
+				qq{Invalid QUALITY:$quality_type tag "$tag_text" found in $linetype.},
+				$file_for_error,
+				$line_for_error
+			);
+			$no_more_error = 1;
+		}
+		else {
+			$count_tags{"Invalid"}{"Total"}{"QUALITY"}++;
+			$count_tags{"Invalid"}{$linetype}{"QUALITY"}++;
+			$logging->ewarn( NOTICE,
+				qq{Invalid QUALITY tag "$tag_text" found in $linetype},
+				$file_for_error,
+				$line_for_error
+			);
+			$no_more_error = 1;
+		}
+	}
+
+#	if ( $tag eq 'TYPE' ) {
+#		my ($type_type) = ( $value =~ /^([^=:|]+)/ );
+#		if ( $type_type && exists $token_Equip_TYPE_tag{$type_type} ) {
+#
+#			# Is it valid for the curent file type?
+#			$tag .= ':' . $type_type;
+#			$value =~ s/^$type_type(.*)/$1/;
+#		}
+#		elsif ($type_type) {
+#
+#			# No valid type type was found
+#			$count_tags{"Invalid"}{"Total"}{"$tag:$type_type"}++;
+#			$count_tags{"Invalid"}{$linetype}{"$tag:$type_type"}++;
+#			$logging->ewarn( NOTICE,
+#				qq{Invalid TYPE:$type_type tag "$tag_text" found in $linetype.},
+#				$file_for_error,
+#				$line_for_error
+#			);
+#			$no_more_error = 1;
+#		}
+#		else {
+#			$count_tags{"Invalid"}{"Total"}{"TYPE"}++;
+#			$count_tags{"Invalid"}{$linetype}{"TYPE"}++;
+#			$logging->ewarn( NOTICE,
+#				qq{Invalid TYPE tag "$tag_text" found in $linetype},
+#				$file_for_error,
+#				$line_for_error
+#			);
+#			$no_more_error = 1;
+#		}
+#	}
+#
+#	if ( $tag eq 'TYPE' ) {
+#		my ($type_type) = ( $value =~ /^([^=:|]+)/ );
+#		if ( $type_type && exists $token_Equip_SubTYPE_tag{$type_type} ) {
+#
+#			# Is it valid for the curent file type?
+#			$tag .= ':' . $type_type;
+#			$value =~ s/^$type_type(.*)/$1/;
+#		}
+#		elsif ($type_type) {
+#
+#			# No valid type type was found
+#			$count_tags{"Invalid"}{"Total"}{"$tag:$type_type"}++;
+#			$count_tags{"Invalid"}{$linetype}{"$tag:$type_type"}++;
+#			$logging->ewarn( NOTICE,
+#				qq{Invalid TYPE:$type_type tag "$tag_text" found in $linetype.},
+#				$file_for_error,
+#				$line_for_error
+#			);
+#			$no_more_error = 1;
+#		}
+#		else {
+#			$count_tags{"Invalid"}{"Total"}{"TYPE"}++;
+#			$count_tags{"Invalid"}{$linetype}{"TYPE"}++;
+#			$logging->ewarn( NOTICE,
+#				qq{Invalid TYPE tag "$tag_text" found in $linetype},
+#				$file_for_error,
+#				$line_for_error
+#			);
+#			$no_more_error = 1;
+#		}
+#	}
+#
+#	if ( $tag eq 'TYPE' ) {
+#		my ($type_type) = ( $value =~ /^([^=:|]+)/ );
+#		if ( $type_type && exists $token_Equip_Quality_TYPE_tag{$type_type} ) {
+#
+#			# Is it valid for the curent file type?
+#			$tag .= ':' . $type_type;
+#			$value =~ s/^$type_type(.*)/$1/;
+#		}
+#		elsif ($type_type) {
+#
+#			# No valid type type was found
+#			$count_tags{"Invalid"}{"Total"}{"$tag:$type_type"}++;
+#			$count_tags{"Invalid"}{$linetype}{"$tag:$type_type"}++;
+#			$logging->ewarn( NOTICE,
+#				qq{Invalid TYPE:$type_type tag "$tag_text" found in $linetype.},
+#				$file_for_error,
+#				$line_for_error
+#			);
+#			$no_more_error = 1;
+#		}
+#		else {
+#			$count_tags{"Invalid"}{"Total"}{"TYPE"}++;
+#			$count_tags{"Invalid"}{$linetype}{"TYPE"}++;
+#			$logging->ewarn( NOTICE,
+#				qq{Invalid TYPE tag "$tag_text" found in $linetype},
+#				$file_for_error,
+#				$line_for_error
+#			);
+#			$no_more_error = 1;
+#		}
+#	}
+#
+#	if ( $tag eq 'TYPE' ) {
+#		my ($type_type) = ( $value =~ /^([^=:|]+)/ );
+#		if ( $type_type && exists $token_Equip_Damage_TYPE_tag{$type_type} ) {
+#
+#			# Is it valid for the curent file type?
+#			$tag .= ':' . $type_type;
+#			$value =~ s/^$type_type(.*)/$1/;
+#		}
+#		elsif ($type_type) {
+#
+#			# No valid type type was found
+#			$count_tags{"Invalid"}{"Total"}{"$tag:$type_type"}++;
+#			$count_tags{"Invalid"}{$linetype}{"$tag:$type_type"}++;
+#			$logging->ewarn( NOTICE,
+#				qq{Invalid TYPE:$type_type tag "$tag_text" found in $linetype.},
+#				$file_for_error,
+#				$line_for_error
+#			);
+#			$no_more_error = 1;
+#		}
+#		else {
+#			$count_tags{"Invalid"}{"Total"}{"TYPE"}++;
+#			$count_tags{"Invalid"}{$linetype}{"TYPE"}++;
+#			$logging->ewarn( NOTICE,
+#				qq{Invalid TYPE tag "$tag_text" found in $linetype},
+#				$file_for_error,
+#				$line_for_error
+#			);
+#			$no_more_error = 1;
+#		}
+#	}
 
 	if ( $tag eq 'BONUS' ) {
 		my ($bonus_type) = ( $value =~ /^([^=:|]+)/ );
@@ -14757,6 +15128,8 @@ sub warn_deprecate {
 
 			# Header part.
 			print {$bioset_fh} << "END_OF_HEADER";
+# $today -- reformated by $SCRIPTNAME v$VERSION
+
 AGESET:0|Adulthood
 END_OF_HEADER
 
@@ -16860,3 +17233,4 @@ Add special case for the ADD:adlib tags
 =head2 v1.00 -- 2002.01.27
 
 First working version. Only the EQUIPMENT file are supported.
+
