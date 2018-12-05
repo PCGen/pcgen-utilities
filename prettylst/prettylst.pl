@@ -7258,7 +7258,7 @@ sub parse_tag {
 
 		if ( $fact_type && exists $token_FACT_tag{$fact_type} ) {
 
-			# Is it valid for the curent file type?
+			# Is it valid for the current token type?
 			$tag .= ':' . $fact_type;
 			$value =~ s/^$fact_type(.*)/$1/;
 		}
@@ -7291,7 +7291,7 @@ sub parse_tag {
 
 		if ( $factset_type && exists $token_FACTSET_tag{$factset_type} ) {
 
-			# Is it valid for the curent file type?
+			# Is it valid for the current token type?
 			$tag .= ':' . $factset_type;
 			$value =~ s/^$factset_type(.*)/$1/;
 		}
@@ -7324,7 +7324,7 @@ sub parse_tag {
 
 		if ( $info_type && exists $token_INFO_tag{$info_type} ) {
 
-			# Is it valid for the curent file type?
+			# Is it valid for the current token type?
 			$tag .= ':' . $info_type;
 			$value =~ s/^$info_type(.*)/$1/;
 		}
@@ -7422,7 +7422,7 @@ sub parse_tag {
 		my ($quality_type) = ( $value =~ /^([^=:|]+)/ );
 		if ( $quality_type && exists $token_QUALITY_tag{$quality_type} ) {
 
-			# Is it valid for the curent file type?
+			# Is it valid for the current token type?
 			$tag .= ':' . $quality_type;
 			$value =~ s/^$quality_type(.*)/$1/;
 		}
