@@ -2016,29 +2016,31 @@ my @double_PCC_tags = (
 );	
 
 my @Global_FACT_Tags = (
-	'FACT:Abb:*',
-	'FACT:AppliedName:*',
-	'FACT:ClassType:*',
-	'FACT:SpellType:*',
-	'FACT:Symbol:*',
-	'FACT:Worshippers:*',
-	'FACT:Title:*',
-	'FACT:Appearance:*',
-	'FACT:RateOfFire:*',
-	'FACT:CompMaterial:*',
+	'FACT:Abb',
+	'FACT:AppliedName',
+	'FACT:Article',
+	'FACT:BaseSize',
+	'FACT:ClassType',
+	'FACT:SpellType',
+	'FACT:Symbol',
+	'FACT:Worshippers',
+	'FACT:Title',
+	'FACT:Appearance',
+	'FACT:RateOfFire',
+	'FACT:CompMaterial',
 	'FACT:*',
 );
 
 my @Global_FACTSET_Tags = (
-	'FACTSET:Pantheon:*',
-	'FACTSET:Race:*',
+	'FACTSET:Pantheon',
+	'FACTSET:Race',
 	'FACTSET:*',
 );
 
 my @INFO_Tags = (
-	'INFO:Prerequisite:*',
-	'INFO:Normal:*',
-	'INFO:Special:*',
+	'INFO:Prerequisite',
+	'INFO:Normal',
+	'INFO:Special',
 	'INFO:*',
 );
 
@@ -2426,9 +2428,8 @@ my %master_order = (
 		'DOMAINS:*',
 		'FOLLOWERALIGN',
 		'DESCISPI',
+		'DESC:.CLEAR',
 		'DESC',
-		@Global_FACT_Tags,
-		@Global_FACTSET_Tags,
 		'DEITYWEAP',
 		'ALIGN',
 		@SOURCE_Tags,
@@ -2444,6 +2445,13 @@ my %master_order = (
 		'SAB:*',
 		'ABILITY:*',
 		'UNENCUMBEREDMOVE',
+		'FACT:Article',
+		'FACT:Symbol',
+		'FACTSET:Pantheon',
+		'FACT:Title',
+		'FACT:Worshippers',
+		'FACT:Appearance',
+		'FACTSET:Race',
 		'SYMBOL',			#  Deprecated 6.05.01
 		'PANTHEON',			#  Deprecated 6.05.01
 		'TITLE',			#  Deprecated 6.05.01
@@ -3037,7 +3045,7 @@ my %master_order = (
 		'FAVCLASS',
 		'XTRASKILLPTSPERLVL',
 		'STARTFEATS',
-		'FACT:*',
+		'FACT:BaseSize',
 		'SIZE',
 		'MOVE',
 		'MOVECLONE',
@@ -3121,6 +3129,7 @@ my %master_order = (
 		'SPELLLEVEL:CLASS:*',
 		'SPELLLEVEL:DOMAIN:*',
 		'KIT',
+		'FACT:*',
 		'SA:.CLEAR',		# Deprecated
 		'SA:*',				# Deprecated
 		'ADD:SPECIAL',		# Deprecated - Remove 5.16 - Special abilities are now set using hidden feats 0r Abilities.
@@ -3922,6 +3931,7 @@ my %column_with_no_tag = (
 my %token_FACT_tag = map { $_ => 1 } (
 	'Abb',
 	'AppliedName',
+	'Article',
 	'BaseSize',
 	'ClassType',
 	'SpellType',
