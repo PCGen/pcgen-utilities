@@ -18,7 +18,7 @@
 			"patterns": [
 				{"name": "keyword.other.pcgen.tag","match": "\\b(ABB)\\b"},
 				{
-					"match": "(^)(ABILITY)",
+					"match": "(^)(ABILITY)(:)",
 					"captures": {
 						"2": { "name": "keyword.other.pcgen.tag" }
 					}
@@ -55,7 +55,7 @@
 				{"name": "keyword.other.pcgen.tag","match": "\\b(ARMORPROF)\\b"},
 				{"name": "keyword.other.pcgen.tag","match": "\\b(ARMORTYPE)\\b"},
 				{
-					"match": "(ASPECT)(:)(.*?)(\\|)(.*?)(\\t|\\n)",
+					"match": "(ASPECT)(:)(.*?)(\\|)(.*?)(\\t|\\n|\\|)",
 					"captures": {
 						"1": { "name": "keyword.other.pcgen.tag" },
 						"3": { "name": "variable.parameter" }
@@ -73,7 +73,7 @@
 				{"name": "keyword.other.pcgen.tag","match": "\\b(BENEFIT)\\b"},
 				{"name": "keyword.other.pcgen.tag","match": "\\b(BIOSET)\\b"},
 				{
-					"match": "(BONUS)(:)(.*?)(\\|)(.*?)(\\t|\\n)",
+					"match": "(BONUS)(:)(.*?)(\\|)",
 					"captures": {
 						"1": { "name": "keyword.other.pcgen.tag" },
 						"3": { "name": "markup.bold" }
@@ -139,14 +139,14 @@
 				{"name": "keyword.other.pcgen.tag","match": "\\b(EYES)\\b"},
 				{"name": "keyword.other.pcgen.tag","match": "\\b(FACE)\\b"},
 				{
-					"match": "(FACT)(:)(.*?)(\\|)(.*?)(\\t|\\n)",
+					"match": "(FACT)(:)(.*?)(\\|)(.*?)(\\t|\\n|\\|)",
 					"captures": {
 						"1": { "name": "keyword.other.pcgen.tag" },
 						"3": { "name": "variable.parameter" }
 					}
 				},
 				{
-					"match": "(FACTDEF)(:)(.*?)(\\|)(.*?)(\\t|\\n)",
+					"match": "(FACTDEF)(:)(.*?)(\\|)(.*?)(\\t|\\n|\\|)",
 					"captures": {
 						"1": { "name": "keyword.other.pcgen.tag" },
 						"3": { "name": "markup.bold" }
@@ -177,7 +177,7 @@
 				{"name": "keyword.other.pcgen.tag","match": "\\b(ICON)\\b"},
 				{"name": "keyword.other.pcgen.tag","match": "\\b(INCLUDE)\\b"},
 				{
-					"match": "(INFO)(:)(.*?)(\\|)(.*?)(\\t|\\n)",
+					"match": "(INFO)(:)(.*?)(\\|)(.*?)(\\t|\\n|\\|)",
 					"captures": {
 						"1": { "name": "keyword.other.pcgen.tag" },
 						"3": { "name": "variable.parameter" }
