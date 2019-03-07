@@ -1,0 +1,32 @@
+{
+	"name": "pcgen",
+	"displayName": "PCGen",
+	"description": "Support for colorizing PCGen lst and pcc files.",
+	"version": "1.0.0",
+	"publisher": "Llisandur",
+	"engines": {
+		"vscode": "^1.30.0"
+	},
+	"categories": [
+		"Languages"
+	],
+	"contributes": {
+		"languages": [{
+			"id": "pcgen",
+			"aliases": ["PCGen", "pcgen"],
+			"extensions": [".lst",".pcc"],
+			"configuration": "./language-configuration.json"
+		}],
+		"grammars": [{
+			"language": "pcgen",
+			"scopeName": "text.pcgen",
+			"path": "./syntaxes/pcgen.tmLanguage.json"
+		}],
+		"configurationDefaults": {
+			"[pcgen]": {
+				"editor.tabSize": 6,
+				"editor.insertSpaces": false
+			}
+		  }
+	}
+}
