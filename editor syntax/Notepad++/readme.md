@@ -1,2 +1,3 @@
 Notepad++ syntax for viewing LST files with some coloring. Not really complete, but it is great starting point for anyone using Notepad++ to edit LST files. 
+
 You will need to place it in "C:\Users\%username%\AppData\Roaming\Notepad++\userDefineLangs" in Windows Vista - Windows 11
